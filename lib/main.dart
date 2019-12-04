@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import './screens/products_overview_screen.dart';
+import 'screens/product_detail_screen.dart';
 
 void main() => runApp(MyApp());
 
@@ -15,6 +16,9 @@ class MyApp extends StatelessWidget {
         canvasColor: Color.fromRGBO(180, 215, 219, 1),
       ),
       home: ProductsOverview(),
+      routes: {
+        'product-detail': (ctx) => ProductsDetail(),
+      },
     );
   }
 }
