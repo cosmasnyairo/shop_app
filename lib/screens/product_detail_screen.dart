@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../providers/products_provider.dart';
-import '../widgets/products_grid.dart';
 
 class ProductsDetail extends StatelessWidget {
   @override
@@ -13,6 +12,7 @@ class ProductsDetail extends StatelessWidget {
       appBar: AppBar(
         title: Text(loadedProduct.title),
       ),
+      body: Image.network(loadedProduct.imageUrl),
     );
   }
 }
