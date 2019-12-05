@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
+import '../providers/cart_provider.dart';
 import '../widgets/products_grid.dart';
+import '../widgets/badge.dart';
 
-enum FilterOptions{
+enum FilterOptions {
   Favourites,
   All,
 }
@@ -10,34 +13,47 @@ enum FilterOptions{
 class ProductsOverview extends StatefulWidget {
   @override
   _ProductsOverviewState createState() => _ProductsOverviewState();
-}   
+}
 
 class _ProductsOverviewState extends State<ProductsOverview> {
-  
-var _showFavourites = false;
-  
- @override
+  var _showFavourites = false;
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: Text('Products'),
         actions: <Widget>[
           PopupMenuButton(
-            onSelected: (FilterOptions val){
-               setState(() {
-                  if (val == FilterOptions.Favourites) {
-                   _showFavourites= true;
-                } 
-                else {
+            onSelected: (FilterOptions val) {
+              setState(() {
+                if (val == FilterOptions.Favourites) {
+                  _showFavourites = true;
+                } else {
                   _showFavourites = false;
-                } 
-               });
+                }
+              });
             },
             itemBuilder: (_) => [
-              PopupMenuItem(child: Text('My Favourites'), value: FilterOptions.Favourites),
-              PopupMenuItem(child: Text('Show All Items'), value: FilterOptions.All),
+              PopupMenuItem(
+                  child: Text('My Favourites'),
+                  value: FilterOptions.Favourites),
+              PopupMenuItem(
+                  child: Text('Show All Items'), value: FilterOptions.All),
             ],
             icon: Icon(Icons.more_vert),
+          ),
+          Consumer<Cart>(
+            builder: (_, cart, ch) => Badge(
+              child: ch,
+              value: cart.itemCount.toString(),
+            ),
+            child: IconButton(
+              icon: Icon(Icons.shopping_cart),
+              onPressed: () {
+                Navigator.of(context).pushNamed('cart-detail');
+              },
+            ),
           ),
         ],
       ),
