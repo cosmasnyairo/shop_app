@@ -1,8 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 
-
-import '../providers/products_provider.dart';
 import '../widgets/products_grid.dart';
 
 enum FilterOptions{
@@ -10,22 +7,31 @@ enum FilterOptions{
   All,
 }
 
-class ProductsOverview extends StatelessWidget {
+class ProductsOverview extends StatefulWidget {
   @override
+  _ProductsOverviewState createState() => _ProductsOverviewState();
+}   
+
+class _ProductsOverviewState extends State<ProductsOverview> {
+  
+var _showFavourites = false;
+  
+ @override
   Widget build(BuildContext context) {
-    final productsData = Provider.of<Products>(context, listen: false);
     return Scaffold(
       appBar: AppBar(
         title: Text('Products'),
         actions: <Widget>[
           PopupMenuButton(
             onSelected: (FilterOptions val){
-                if (val == FilterOptions.Favourites) {
-                  productsData.showFavourites();
+               setState(() {
+                  if (val == FilterOptions.Favourites) {
+                   _showFavourites= true;
                 } 
                 else {
-                  productsData.showAll();
-                }
+                  _showFavourites = false;
+                } 
+               });
             },
             itemBuilder: (_) => [
               PopupMenuItem(child: Text('My Favourites'), value: FilterOptions.Favourites),
@@ -35,7 +41,7 @@ class ProductsOverview extends StatelessWidget {
           ),
         ],
       ),
-      body: ProductsGrid(),
+      body: ProductsGrid(_showFavourites),
     );
   }
 }
