@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-
 import '../widgets/cart_item.dart';
 import '../providers/cart_provider.dart';
 
@@ -30,6 +29,7 @@ class CartDetail extends StatelessWidget {
                   Chip(
                     label: Text(
                       '\$ ${cart.totalAmount}',
+                      overflow: TextOverflow.clip,
                       style: TextStyle(
                           color: Theme.of(context).textTheme.title.color),
                     ),
@@ -47,6 +47,14 @@ class CartDetail extends StatelessWidget {
             height: 10,
           ),
           Text('You have ${cart.itemCount} items in your cart.'),
+          cart.items.isEmpty
+              ? SizedBox(
+                  height: 10,
+                )
+              : Text(
+                  'Swipe right to remove an item from the cart',
+                  style: TextStyle(color: Colors.grey),
+                ),
           Expanded(
             child: ListView.builder(
               itemCount: cart.itemCount,
@@ -59,7 +67,18 @@ class CartDetail extends StatelessWidget {
                 cart.items.values.toList()[i].imageUrl,
               ),
             ),
-          )
+          ),
+          cart.items.isNotEmpty
+              ? RaisedButton(
+                  child: Text('Clear Cart!'),
+                  color: Theme.of(context).accentColor,
+                  onPressed: () {
+                    Provider.of<Carts>(context, listen: false).clearCart();
+                  },
+                )
+              : SizedBox(
+                  height: 10,
+                )
         ],
       ),
     );
