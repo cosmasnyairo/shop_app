@@ -17,13 +17,13 @@ class MyApp extends StatelessWidget {
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (ctx) => Products()),
-        ChangeNotifierProvider(create: (ctx) => Cart()),
+        ChangeNotifierProvider(create: (ctx) => Carts()),
       ],
       child: MaterialApp(
         title: 'Shop App',
         theme: ThemeData(
-          primarySwatch: Colors.yellow,
-          accentColor: Colors.deepOrange,
+          primaryColor: Colors.teal,
+          accentColor: Colors.deepOrangeAccent,
           fontFamily: 'Lato',
           canvasColor: Color.fromRGBO(180, 215, 219, 1),
         ),

@@ -24,6 +24,18 @@ class _ProductsOverviewState extends State<ProductsOverview> {
       appBar: AppBar(
         title: Text('Products'),
         actions: <Widget>[
+          Consumer<Carts>(
+            builder: (_, cart, child) => Badge(
+              child: child,
+              value: cart.itemCount.toString(),
+            ),
+            child: IconButton(
+              icon: Icon(Icons.shopping_cart),
+              onPressed: () {
+                Navigator.of(context).pushNamed('cart-detail');
+              },
+            ),
+          ),
           PopupMenuButton(
             onSelected: (FilterOptions val) {
               setState(() {
@@ -42,18 +54,6 @@ class _ProductsOverviewState extends State<ProductsOverview> {
                   child: Text('Show All Items'), value: FilterOptions.All),
             ],
             icon: Icon(Icons.more_vert),
-          ),
-          Consumer<Cart>(
-            builder: (_, cart, ch) => Badge(
-              child: ch,
-              value: cart.itemCount.toString(),
-            ),
-            child: IconButton(
-              icon: Icon(Icons.shopping_cart),
-              onPressed: () {
-                Navigator.of(context).pushNamed('cart-detail');
-              },
-            ),
           ),
         ],
       ),

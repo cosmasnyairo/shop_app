@@ -2,10 +2,10 @@ import 'package:flutter/foundation.dart';
 
 import '../models/cart.dart';
 
-class Cart with ChangeNotifier {
-  Map<String, CartItem> _items={};
+class Carts with ChangeNotifier {
+  Map<String, Cart> _items={};
 
-  Map<String, CartItem> get items {
+  Map<String, Cart> get items {
     return {..._items};
   }
 
@@ -13,11 +13,19 @@ class Cart with ChangeNotifier {
     return _items.length;
   }
 
+  double get totalAmount{
+    var total = 0.0;
+    _items.forEach((key, a){
+        total += a.price*a.quantity;
+    });
+    return total;
+  }
+
   void addItem(String id, double price, String title, String imageUrl) {
     if (_items.containsKey(id)) {
       _items.update(
           id,
-          (exist) => CartItem(
+          (exist) => Cart(
                 id: exist.id,
                 title: exist.id,
                 price: exist.price,
@@ -28,7 +36,7 @@ class Cart with ChangeNotifier {
       //add new
       _items.putIfAbsent(
         id,
-        () => CartItem(
+        () => Cart(
             id: DateTime.now().toString(),
             title: title,
             price: price,
