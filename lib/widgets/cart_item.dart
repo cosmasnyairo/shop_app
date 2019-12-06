@@ -48,7 +48,7 @@ class CartItem extends StatelessWidget {
               child: FittedBox(
                   child: CircleAvatar(child: Image.network('$imageUrl'))),
             ),
-            title: Text('$title'),
+            title: Text('$title', overflow:TextOverflow.ellipsis,),
             subtitle: Text('Total: \$${(price * quantity)}'),
             trailing: Text('\$$price x $quantity'),
           ),
