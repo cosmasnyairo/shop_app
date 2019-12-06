@@ -1,6 +1,6 @@
 import 'package:flutter/foundation.dart';
 
-class Cart with ChangeNotifier {
+class Cart {
   final String id;
   final String title;
   final int quantity;

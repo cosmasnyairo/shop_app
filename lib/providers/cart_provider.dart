@@ -3,7 +3,7 @@ import 'package:flutter/foundation.dart';
 import '../models/cart.dart';
 
 class Carts with ChangeNotifier {
-  Map<String, Cart> _items={};
+  Map<String, Cart> _items = {};
 
   Map<String, Cart> get items {
     return {..._items};
@@ -13,12 +13,17 @@ class Carts with ChangeNotifier {
     return _items.length;
   }
 
-  double get totalAmount{
+  double get totalAmount {
     var total = 0.0;
-    _items.forEach((key, a){
-        total += a.price*a.quantity;
+    _items.forEach((key, a) {
+      total += a.price * a.quantity;
     });
     return total;
+  }
+
+  void removeItem(String id) {
+    _items.remove(id);
+    notifyListeners();
   }
 
   void addItem(String id, double price, String title, String imageUrl) {
