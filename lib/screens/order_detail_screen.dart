@@ -14,7 +14,7 @@ class OrderDetail extends StatelessWidget {
       appBar: AppBar(
         title: Text('Your Orders'),
       ),
-      drawer: appDrawer(),
+      drawer: AppDrawer(),
       body: ListView.builder(
         itemCount: order.orders.length,
         itemBuilder: (ctx , i) => OrderItem(order.orders[i]),

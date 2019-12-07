@@ -58,7 +58,7 @@ class _ProductsOverviewState extends State<ProductsOverview> {
           ),
         ],
       ),
-      drawer: appDrawer(),
+      drawer: AppDrawer(),
       body: ProductsGrid(_showFavourites),
     );
   }
