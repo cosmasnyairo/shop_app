@@ -53,7 +53,15 @@ class CartItem extends StatelessWidget {
             leading: Padding(
               padding: const EdgeInsets.all(5),
               child: FittedBox(
-                  child: CircleAvatar(child: Image.network('$imageUrl'))),
+                child: ClipOval(
+                  child: Image.network(
+                    imageUrl,
+                    width: 50,
+                    height: 50,
+                    fit: BoxFit.contain,
+                  ),
+                ),
+              ),
             ),
             title: Text(
               '$title',

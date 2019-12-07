@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import '../widgets/drawer.dart';
 
 import '../widgets/cart_item.dart';
 
@@ -14,6 +15,7 @@ class CartDetail extends StatelessWidget {
       appBar: AppBar(
         title: Text('Cart'),
       ),
+      drawer: appDrawer(),
       body: Column(
         children: <Widget>[
           Card(
@@ -30,8 +32,7 @@ class CartDetail extends StatelessWidget {
                   Spacer(),
                   Chip(
                     label: Text(
-                      '\$ ${cart.totalAmount}',
-                      overflow: TextOverflow.clip,
+                      '\$ ${cart.totalAmount.toStringAsFixed(2)}',
                       style: TextStyle(
                           color: Theme.of(context).textTheme.title.color),
                     ),
@@ -45,8 +46,8 @@ class CartDetail extends StatelessWidget {
                               cart.items.values.toList(),
                               cart.totalAmount,
                             );
+                            Navigator.of(context).pushReplacementNamed('order-detail');
                             cart.clearCart(); 
-                            Navigator.of(context).pushNamed('order-detail');
                           }
                         : null,
                   ),
