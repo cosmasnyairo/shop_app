@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../widgets/cart_item.dart';
+
 import '../providers/cart_provider.dart';
+import '../providers/orders_provider.dart';
 
 class CartDetail extends StatelessWidget {
   @override
@@ -37,8 +39,17 @@ class CartDetail extends StatelessWidget {
                   FlatButton(
                     child: Text('COMPLETE ORDER!'),
                     textColor: Theme.of(context).accentColor,
-                    onPressed: () {},
-                  )
+                    onPressed: cart.items.isNotEmpty
+                        ? () {   
+                            Provider.of<Orders>(context, listen: false).addOrder(
+                              cart.items.values.toList(),
+                              cart.totalAmount,
+                            );
+                            cart.clearCart(); 
+                            Navigator.of(context).pushNamed('order-detail');
+                          }
+                        : null,
+                  ),
                 ],
               ),
             ),
@@ -73,6 +84,7 @@ class CartDetail extends StatelessWidget {
                   child: Text('Clear Cart!'),
                   color: Theme.of(context).accentColor,
                   onPressed: () {
+                    
                     Provider.of<Carts>(context, listen: false).clearCart();
                   },
                 )

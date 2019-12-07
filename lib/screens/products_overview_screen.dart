@@ -24,6 +24,7 @@ class _ProductsOverviewState extends State<ProductsOverview> {
       appBar: AppBar(
         title: Text('Products'),
         actions: <Widget>[
+          
           Consumer<Carts>(
             builder: (_, cart, child) => Badge(
               child: child,

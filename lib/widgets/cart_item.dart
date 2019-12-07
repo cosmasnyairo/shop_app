@@ -11,15 +11,22 @@ class CartItem extends StatelessWidget {
   final double price;
   final String imageUrl;
 
-  CartItem(this.id,  this.productId, this.title, this.quantity, this.price, this.imageUrl);
+  CartItem(
+    this.id,
+    this.productId,
+    this.title,
+    this.quantity,
+    this.price,
+    this.imageUrl,
+  );
 
   @override
   Widget build(BuildContext context) {
     return Dismissible(
       direction: DismissDirection.endToStart,
       key: ValueKey(id),
-      onDismissed: (direction){
-        Provider.of<Carts>(context,listen: false).removeItem(productId);
+      onDismissed: (direction) {
+        Provider.of<Carts>(context, listen: false).removeItem(productId);
       },
       background: Container(
         color: Theme.of(context).errorColor,
@@ -48,7 +55,10 @@ class CartItem extends StatelessWidget {
               child: FittedBox(
                   child: CircleAvatar(child: Image.network('$imageUrl'))),
             ),
-            title: Text('$title', overflow:TextOverflow.ellipsis,),
+            title: Text(
+              '$title',
+              overflow: TextOverflow.ellipsis,
+            ),
             subtitle: Text('Total: \$${(price * quantity)}'),
             trailing: Text('\$$price x $quantity'),
           ),
