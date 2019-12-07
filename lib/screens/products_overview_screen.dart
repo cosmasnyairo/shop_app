@@ -3,7 +3,8 @@ import 'package:provider/provider.dart';
 
 import '../providers/cart_provider.dart';
 import '../widgets/products_grid.dart';
-import '../widgets/badge.dart';
+import '../widgets/badge.dart'; 
+import '../widgets/drawer.dart';
 
 enum FilterOptions {
   Favourites,
@@ -24,7 +25,6 @@ class _ProductsOverviewState extends State<ProductsOverview> {
       appBar: AppBar(
         title: Text('Products'),
         actions: <Widget>[
-          
           Consumer<Carts>(
             builder: (_, cart, child) => Badge(
               child: child,
@@ -58,6 +58,7 @@ class _ProductsOverviewState extends State<ProductsOverview> {
           ),
         ],
       ),
+      drawer: appDrawer(),
       body: ProductsGrid(_showFavourites),
     );
   }
