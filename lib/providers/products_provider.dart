@@ -78,15 +78,22 @@ class Products with ChangeNotifier {
   }
 
   List<Product> get favourites {
-    return _items.where((test)=>test.isFavourite).toList();
+    return _items.where((test) => test.isFavourite).toList();
   }
 
   Product findById(String id) {
     return _items.firstWhere((p) => p.id == id);
   }
 
-
-  void addProducts() {
+  void addProducts(Product prod) {
+    final newProduct = Product(
+      id: DateTime.now().toString(),
+      title: prod.title,
+      description: prod.description,
+      price: prod.price,
+      imageUrl: prod.imageUrl,
+    );
+    _items.add(newProduct);
     notifyListeners();
-  }
+  } 
 }

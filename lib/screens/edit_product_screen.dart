@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+
+import '../providers/products_provider.dart';
 
 import '../models/product.dart';
 
@@ -38,16 +41,25 @@ class _EditProductScreenState extends State<EditProductScreen> {
 
   void _updateImageurl() {
     if (!_imageUrlFocusNode.hasFocus) {
+      if ((!_imageUrlController.text.startsWith('http') &&
+              !_imageUrlController.text.startsWith('https')) ||
+          (!_imageUrlController.text.endsWith('.jpg') &&
+              !_imageUrlController.text.endsWith('.png') &&
+              !_imageUrlController.text.endsWith('.jpeg') &&
+              !_imageUrlController.text.contains('image'))) {
+        return;
+      }
       setState(() {});
     }
   }
 
   void _saveForm() {
-    _form.currentState.save();
-    print(_editedProduct.title);
-    print(_editedProduct.price);
-    print(_editedProduct.description);
-    print(_editedProduct.imageUrl);
+    final isvalid = _form.currentState.validate();
+    if (isvalid) {
+      _form.currentState.save();
+      Provider.of<Products>(context, listen: false).addProducts(_editedProduct);
+      Navigator.of(context).pop();
+    }
   }
 
   @override
@@ -84,6 +96,12 @@ class _EditProductScreenState extends State<EditProductScreen> {
                     id: null,
                   );
                 },
+                validator: (value) {
+                  if (value.isEmpty) {
+                    return 'Please Enter Title';
+                  }
+                  return null;
+                },
               ),
               TextFormField(
                 decoration: InputDecoration(labelText: 'Price'),
@@ -102,10 +120,23 @@ class _EditProductScreenState extends State<EditProductScreen> {
                     price: double.parse(v),
                   );
                 },
+                validator: (value){
+                  if (value.isEmpty) {
+                    return 'Please Enter Price';
+                  }
+                  if (double.tryParse(value) == null) {
+                    return 'Please Enter a Valid Number';
+                  }
+                  if (double.parse(value) <= 0) {
+                    return 'Please Enter A Price Greater Than 0';
+                  }
+                  return null;
+                },
               ),
               TextFormField(
                 decoration: InputDecoration(labelText: 'Description'),
-                maxLines: 3,
+                maxLines: 5,
+                maxLength: 700,
                 keyboardType: TextInputType.multiline,
                 focusNode: _descriptionFocusNode,
                 onSaved: (v) {
@@ -116,6 +147,15 @@ class _EditProductScreenState extends State<EditProductScreen> {
                     imageUrl: _editedProduct.imageUrl,
                     price: _editedProduct.price,
                   );
+                },
+                validator: (value) {
+                  if (value.isEmpty) {
+                    return 'Please Enter a Description';
+                  }
+                  if (value.length < 10) {
+                    return 'Please Enter Description Greater than 10';
+                  }
+                  return null;
                 },
               ),
               TextFormField(
@@ -132,6 +172,21 @@ class _EditProductScreenState extends State<EditProductScreen> {
                     imageUrl: v,
                     price: _editedProduct.price,
                   );
+                },
+                validator: (value) {
+                  if (value.isEmpty) {
+                    return 'Please Enter A Url';
+                  }
+                  if (!value.startsWith('http') && !value.startsWith('https')) {
+                    return 'Please Enter a Valid Url';
+                  }
+                  if (!value.endsWith('.jpg') &&
+                      !value.endsWith('.png') &&
+                      !value.endsWith('.jpeg') &&
+                      !value.contains('image')) {
+                    return 'Please Enter a Valid Image Url';
+                  }
+                  return null;
                 },
               ),
               SizedBox(
