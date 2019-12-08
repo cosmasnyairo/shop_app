@@ -111,7 +111,7 @@ class _EditProductScreenState extends State<EditProductScreen> {
           )
         ],
       ),
-      body: Padding(
+      body: Padding(  
         padding: const EdgeInsets.all(10),
         child: Form(
           key: _form,
