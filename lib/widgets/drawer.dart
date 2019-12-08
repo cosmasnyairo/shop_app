@@ -18,7 +18,7 @@ class AppDrawer extends StatelessWidget {
             title: Text('Shop'),
             onTap: () {
               Navigator.of(context).pushReplacementNamed('/');
-            },
+               },
           ),
           Divider(),
           ListTile(

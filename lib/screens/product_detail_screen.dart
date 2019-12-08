@@ -60,13 +60,6 @@ class ProductsDetail extends StatelessWidget {
           ],
         ),
       ),
-      floatingActionButton: FloatingActionButton(
-        child: Icon(Icons.shopping_cart),
-        onPressed: () {
-          cart.addItem(loadedProduct.id, loadedProduct.price,
-              loadedProduct.title, loadedProduct.imageUrl);
-        },
-      ),
     );
   }
 }

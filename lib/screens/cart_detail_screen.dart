@@ -85,7 +85,6 @@ class CartDetail extends StatelessWidget {
                   child: Text('Clear Cart!'),
                   color: Theme.of(context).accentColor,
                   onPressed: () {
-                    
                     Provider.of<Carts>(context, listen: false).clearCart();
                   },
                 )
