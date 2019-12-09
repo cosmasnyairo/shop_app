@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../providers/products_provider.dart';
+
 class ProductsDetail extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -15,17 +16,16 @@ class ProductsDetail extends StatelessWidget {
         child: Column(
           children: <Widget>[
             Container(
-              height: 400,
+              height: 350,
               width: double.infinity,
               padding: EdgeInsets.all(10),
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(12),
                 child: Image.network(
                   loadedProduct.imageUrl,
-                  fit: BoxFit.cover,
+                  fit: BoxFit.fill,
                 ),
               ),
-              alignment: Alignment.center,
             ),
             SizedBox(
               height: 10,
@@ -43,16 +43,12 @@ class ProductsDetail extends StatelessWidget {
             Container(
               width: double.infinity,
               padding: EdgeInsets.symmetric(horizontal: 12),
-
               child: Text(
                 '${loadedProduct.description}',
                 textAlign: TextAlign.center,
                 softWrap: true,
-                style: TextStyle(
-                ),
               ),
             ),
-            
           ],
         ),
       ),
