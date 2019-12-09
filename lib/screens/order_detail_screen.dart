@@ -9,16 +9,40 @@ import '../providers/orders_provider.dart';
 class OrderDetail extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    final order= Provider.of<Orders>(context);
     return Scaffold(
       appBar: AppBar(
         title: Text('Your Orders'),
       ),
       drawer: AppDrawer(),
-      body: ListView.builder(
-        itemCount: order.orders.length,
-        itemBuilder: (ctx , i) => OrderItem(order.orders[i]),
-      )
+      body: FutureBuilder(
+          future: Provider.of<Orders>(context, listen: false).fetchOrder(),
+          builder: (ctx, dataSnapshot) {
+            if (dataSnapshot.data == ConnectionState.waiting) {
+              return Center(
+                child: CircularProgressIndicator(),
+              );
+            } else {
+              if (dataSnapshot.error != null) {
+                //presence of error
+                return Center(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: <Widget>[
+                      Text('An Error Occured'),
+                      Icon(Icons.sentiment_satisfied),
+                    ],
+                  ),
+                );
+              } else {
+                return Consumer<Orders>(
+                  builder: (ctx, order, child) => ListView.builder(
+                    itemCount: order.orders.length,
+                    itemBuilder: (ctx, i) => OrderItem(order.orders[i]),
+                  ),
+                );
+              }
+            }
+          }),
     );
   }
 }

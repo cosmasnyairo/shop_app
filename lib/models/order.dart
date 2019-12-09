@@ -2,7 +2,7 @@ import 'package:flutter/foundation.dart';
 
 import 'cart.dart';
 
-class Order {
+class Order{
   final String id;
   final double amount;
   final List<Cart> products;

@@ -14,14 +14,14 @@ class AppDrawer extends StatelessWidget {
             height: 10,
           ),
           ListTile(
-            leading: Icon(Icons.shop),
-            title: Text('Shop'),
+            leading: Icon(Icons.shop,size: 28,),
+            title: Text('Shop',),
             onTap: () {
               Navigator.of(context).pushReplacementNamed('/');
                },
           ),
           ListTile(
-            leading: Icon(Icons.payment),
+            leading: Icon(Icons.payment,size: 28,),
             title: Text('Orders'),
             onTap: () {
               Navigator.of(context).pushReplacementNamed('order-detail');
@@ -29,7 +29,7 @@ class AppDrawer extends StatelessWidget {
           ),
           Divider(),
           ListTile(
-            leading: Icon(Icons.edit_attributes),
+            leading: Icon(Icons.my_location,size: 28,),
             title: Text('Manage Products'),
             onTap: () {
               Navigator.of(context).pushReplacementNamed('manage-products');
