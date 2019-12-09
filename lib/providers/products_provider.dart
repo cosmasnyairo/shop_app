@@ -1,4 +1,6 @@
 import 'package:flutter/cupertino.dart';
+import 'dart:convert';
+import 'package:http/http.dart' as http;
 
 import '../models/product.dart';
 
@@ -85,26 +87,41 @@ class Products with ChangeNotifier {
     return _items.firstWhere((p) => p.id == id);
   }
 
-  void addProducts(Product prod) {
-    final newProduct = Product(
-      id: DateTime.now().toString(),
-      title: prod.title,
-      description: prod.description,
-      price: prod.price,
-      imageUrl: prod.imageUrl,
-    );
-    _items.add(newProduct);
-    notifyListeners();
-  } 
-
-  void updateProducts(String id, Product prod){
-   final prodIndex=  _items.indexWhere((test)=> test.id == id);
-   _items[prodIndex] = prod;
-   notifyListeners();
+  Future<void> addProducts(Product prod) async {
+    const url = 'https://shop-app-dc2e5.firebaseio.com/products.json';
+    try {
+      final response = await http.post(
+        url,
+        body: json.encode({
+          'title': prod.title,
+          'description': prod.description,
+          'price': prod.price,
+          'imageUrl': prod.imageUrl,
+          'isFavourite': prod.isFavourite,
+        }),
+      );
+      final newProduct = Product(
+        id: json.decode(response.body)['name'],
+        title: prod.title,
+        description: prod.description,
+        price: prod.price,
+        imageUrl: prod.imageUrl,
+      );
+      _items.add(newProduct);
+      notifyListeners();
+    } catch (error) {
+      throw error;
+    }
   }
 
-  void deleteProduct(String prodId){
-    _items.removeWhere((test)=> test.id == prodId );
+  void updateProducts(String id, Product prod) {
+    final prodIndex = _items.indexWhere((test) => test.id == id);
+    _items[prodIndex] = prod;
+    notifyListeners();
+  }
+
+  void deleteProduct(String prodId) {
+    _items.removeWhere((test) => test.id == prodId);
     notifyListeners();
   }
 }
