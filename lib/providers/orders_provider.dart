@@ -16,14 +16,23 @@ class Orders with ChangeNotifier {
 
   void fetchOrder() {}
 
-  void addOrder(List<Cart> cartProducts, double total) async {
+  Future<void> addOrder(List<Cart> cartProducts, double total) async {
     try {
+      final timestamp = DateTime.now();
       final response = await http.post(
         url,
         body: json.encode({
-          'products' : cartProducts ,
           'amount': total,
-          'time': DateTime.now(),
+          'time': timestamp.toIso8601String(),
+          'products': cartProducts
+              .map((f) => {
+                    'id': f.id,
+                    'title': f.title,
+                    'quantity': f.quantity,
+                    'price': f.price,
+                    'imageUrl': f.imageUrl,
+                  })
+              .toList()
         }),
       );
       _orders.insert(
@@ -32,7 +41,7 @@ class Orders with ChangeNotifier {
           id: json.decode(response.body)['name'],
           products: cartProducts,
           amount: total,
-          time: DateTime.now(),
+          time: timestamp,
         ),
       );
       notifyListeners();

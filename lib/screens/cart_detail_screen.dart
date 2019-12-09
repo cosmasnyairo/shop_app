@@ -3,10 +3,9 @@ import 'package:provider/provider.dart';
 import '../widgets/drawer.dart';
 
 import '../widgets/cart_item.dart';
+import '../widgets/order_button.dart';
 
 import '../providers/cart_provider.dart';
-import '../providers/orders_provider.dart';
-
 class CartDetail extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -37,20 +36,7 @@ class CartDetail extends StatelessWidget {
                           color: Theme.of(context).textTheme.title.color),
                     ),
                   ),
-                  FlatButton(
-                    child: Text('COMPLETE ORDER!'),
-                    textColor: Theme.of(context).accentColor,
-                    onPressed: cart.items.isNotEmpty
-                        ? () {   
-                            Provider.of<Orders>(context, listen: false).addOrder(
-                              cart.items.values.toList(),
-                              cart.totalAmount,
-                            );
-                            Navigator.of(context).pushReplacementNamed('order-detail');
-                            cart.clearCart(); 
-                          }
-                        : null,
-                  ),
+                  OrderButton(cart: cart),
                 ],
               ),
             ),
