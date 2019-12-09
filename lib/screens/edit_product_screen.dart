@@ -104,7 +104,7 @@ class _EditProductScreenState extends State<EditProductScreen> {
             builder: (ctx) => AlertDialog(
                   title: Text('An Error Occurred!'),
                   content: Text(
-                      'Something went wrong, Please Try again later or Contact us to solve this.'),
+                      'Something went wrong, Please Try again later.'),
                   actions: <Widget>[
                     FlatButton(
                       child: Text('Ok'),

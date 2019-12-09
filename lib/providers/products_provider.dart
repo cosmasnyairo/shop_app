@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 
+import '../models/http_exception.dart';
 import '../models/product.dart';
 
 const url = 'https://shop-app-dc2e5.firebaseio.com/products.json';
@@ -85,22 +86,24 @@ class Products with ChangeNotifier {
     } else {}
   }
 
-  void deleteProduct(String id) {
+  Future<void> deleteProduct(String id) async {
     final producturl =
         'https://shop-app-dc2e5.firebaseio.com/products/$id.json';
     final existingProductIndex = _items.indexWhere((test) => test.id == id);
     var existingProduct = _items[existingProductIndex];
+    //store copy of product temporarily
     _items.removeAt(existingProductIndex);
+    // remove original product from memory
     notifyListeners();
-    http.delete(producturl).then((response) {
-      if(response.statusCode >= 400){
-      
-      }
-      existingProduct = null;
-    }).catchError((_) {
+    final response = await http.delete(producturl);
+    if (response.statusCode >= 400) {
       _items.insert(existingProductIndex, existingProduct);
-    });
+      //return product to list if error is met 
+      notifyListeners();
+      throw HttpException('Unable to delete Product');
+    }
+    existingProduct = null;
+
     //optimistic delete and rollback
-    notifyListeners();
   }
 }
