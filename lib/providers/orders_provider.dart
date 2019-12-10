@@ -5,9 +5,9 @@ import 'package:http/http.dart' as http;
 import '../models/cart.dart';
 import '../models/order.dart';
 
-const url = 'https://shop-app-dc2e5.firebaseio.com/orders.json';
-
 class Orders with ChangeNotifier {
+  final String authToken;
+  Orders(this.authToken, this._orders);
   List<Order> _orders = [];
 
   List<Order> get orders {
@@ -15,6 +15,8 @@ class Orders with ChangeNotifier {
   }
 
   Future<void> fetchOrder() async {
+    final url =
+        'https://shop-app-dc2e5.firebaseio.com/orders.json?auth=$authToken';
     final response = await http.get(url);
     final List<Order> loadedOrders = [];
     final extractedData = json.decode(response.body) as Map<String, dynamic>;
@@ -46,6 +48,8 @@ class Orders with ChangeNotifier {
   }
 
   Future<void> addOrder(List<Cart> cartProducts, double total) async {
+    final url =
+        'https://shop-app-dc2e5.firebaseio.com/orders.jso?auth=$authToken';
     try {
       final timestamp = DateTime.now();
       final response = await http.post(

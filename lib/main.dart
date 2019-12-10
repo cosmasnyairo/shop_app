@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:shop_app/models/order.dart';
 
 import './screens/auth_screen.dart';
 
@@ -24,10 +25,20 @@ class MyApp extends StatelessWidget {
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (ctx) => Authenticate()),
-        ChangeNotifierProvider(create: (ctx) => Products()),
+        ChangeNotifierProxyProvider<Authenticate, Products>(
+          update: (ctx, auth, previousProduct) => Products(
+            auth.token,
+            previousProduct == null ? [] : previousProduct.items,
+          ),
+        ),
         //either syntax works
         ChangeNotifierProvider.value(value: Carts()),
-        ChangeNotifierProvider.value(value: Orders()),
+        ChangeNotifierProxyProvider<Authenticate, Orders>(
+          update: (ctx, auth, previousOrder) => Orders(
+            auth.token,
+            previousOrder == null ? [] : previousOrder.orders,
+          ),
+        ),
       ],
       child: Consumer<Authenticate>(
         builder: (ctx, auth, _) => MaterialApp(

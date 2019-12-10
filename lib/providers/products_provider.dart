@@ -5,9 +5,10 @@ import 'package:http/http.dart' as http;
 import '../models/http_exception.dart';
 import '../models/product.dart';
 
-const url = 'https://shop-app-dc2e5.firebaseio.com/products.json';
-
 class Products with ChangeNotifier {
+  final String authToken;
+  Products(this.authToken, this._items);
+
   List<Product> _items = [];
   List<Product> get items {
     return [..._items];
@@ -22,10 +23,13 @@ class Products with ChangeNotifier {
   }
 
   Future<void> fetchProducts() async {
+    
+  final url =
+      'https://shop-app-dc2e5.firebaseio.com/products.json?auth=$authToken';
     try {
       final response = await http.get(url);
       final extractedData = json.decode(response.body) as Map<String, dynamic>;
-      if (extractedData== null) {
+      if (extractedData == null) {
         return;
       }
       final List<Product> loadedProducts = [];
@@ -47,6 +51,9 @@ class Products with ChangeNotifier {
   }
 
   Future<void> addProducts(Product prod) async {
+    
+  final url =
+      'https://shop-app-dc2e5.firebaseio.com/products.json?auth=$authToken';
     try {
       final response = await http.post(
         url,
@@ -76,7 +83,7 @@ class Products with ChangeNotifier {
     final prodIndex = _items.indexWhere((test) => test.id == id);
     if (prodIndex >= 0) {
       final producturl =
-          'https://shop-app-dc2e5.firebaseio.com/products/$id.json';
+          'https://shop-app-dc2e5.firebaseio.com/products/$id.json?auth=$authToken';
       await http.patch(producturl,
           body: json.encode({
             'title': prod.title,
@@ -91,7 +98,7 @@ class Products with ChangeNotifier {
 
   Future<void> deleteProduct(String id) async {
     final producturl =
-        'https://shop-app-dc2e5.firebaseio.com/products/$id.json';
+        'https://shop-app-dc2e5.firebaseio.com/products/$id.json?auth=$authToken';
     final existingProductIndex = _items.indexWhere((test) => test.id == id);
     var existingProduct = _items[existingProductIndex];
     //store copy of product temporarily
@@ -101,7 +108,7 @@ class Products with ChangeNotifier {
     final response = await http.delete(producturl);
     if (response.statusCode >= 400) {
       _items.insert(existingProductIndex, existingProduct);
-      //return product to list if error is met 
+      //return product to list if error is met
       notifyListeners();
       throw HttpException('Unable to delete Product');
     }
