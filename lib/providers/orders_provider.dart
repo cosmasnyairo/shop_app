@@ -10,7 +10,7 @@ class Orders with ChangeNotifier {
   Orders(this.authToken, this._orders);
   List<Order> _orders = [];
 
-  List<Order> get orders {
+  List<Order> get orders { 
     return [..._orders];
   }
 
@@ -49,7 +49,7 @@ class Orders with ChangeNotifier {
 
   Future<void> addOrder(List<Cart> cartProducts, double total) async {
     final url =
-        'https://shop-app-dc2e5.firebaseio.com/orders.jso?auth=$authToken';
+        'https://shop-app-dc2e5.firebaseio.com/orders.json?auth=$authToken';
     try {
       final timestamp = DateTime.now();
       final response = await http.post(
