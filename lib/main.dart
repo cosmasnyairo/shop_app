@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-
 import './screens/auth_screen.dart';
 
 import './screens/user_products_screen.dart';
@@ -30,23 +29,25 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider.value(value: Carts()),
         ChangeNotifierProvider.value(value: Orders()),
       ],
-      child: MaterialApp(
-        title: 'Shop App',
-        theme: ThemeData(
-          primaryColor: Colors.teal,
-          accentColor: Colors.deepOrangeAccent,
-          fontFamily: 'Lato',
-          canvasColor: Color.fromRGBO(180, 215, 219, 1),
+      child: Consumer<Authenticate>(
+        builder: (ctx, auth, _) => MaterialApp(
+          title: 'Shop App',
+          theme: ThemeData(
+            primaryColor: Colors.teal,
+            accentColor: Colors.deepOrangeAccent,
+            fontFamily: 'Lato',
+            canvasColor: Color.fromRGBO(180, 215, 219, 1),
+          ),
+          home: auth.isAuth ? ProductsOverview() : AuthScreen(),
+          routes: {
+            'product-overview': (ctx) => ProductsOverview(),
+            'product-detail': (ctx) => ProductsDetail(),
+            'cart-detail': (ctx) => CartDetail(),
+            'order-detail': (ctx) => OrderDetail(),
+            'manage-products': (ctx) => UserProducts(),
+            'edit-products': (ctx) => EditProductScreen(),
+          },
         ),
-        home: AuthScreen(),
-        routes: {
-          'product-overview': (ctx) => ProductsOverview(),
-          'product-detail': (ctx) => ProductsDetail(),
-          'cart-detail': (ctx) => CartDetail(),
-          'order-detail': (ctx) => OrderDetail(),
-          'manage-products': (ctx) => UserProducts(),
-          'edit-products': (ctx) => EditProductScreen(),
-        },
       ),
     );
   }
