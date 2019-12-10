@@ -102,9 +102,13 @@ class _EditProductScreenState extends State<EditProductScreen> {
         await showDialog(
             context: context,
             builder: (ctx) => AlertDialog(
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  elevation: 2,
                   title: Text('An Error Occurred!'),
-                  content: Text(
-                      'Something went wrong, Please Try again later.'),
+                  content:
+                      Text('Something went wrong, Please Try again later.'),
                   actions: <Widget>[
                     FlatButton(
                       child: Text('Ok'),
