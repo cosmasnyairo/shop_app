@@ -7,16 +7,21 @@ import '../models/order.dart';
 
 class Orders with ChangeNotifier {
   final String authToken;
-  Orders(this.authToken, this._orders);
+  final String userId;
+  Orders(
+    this.authToken,
+    this._orders,
+    this.userId,
+  );
   List<Order> _orders = [];
 
-  List<Order> get orders { 
+  List<Order> get orders {
     return [..._orders];
   }
 
   Future<void> fetchOrder() async {
     final url =
-        'https://shop-app-dc2e5.firebaseio.com/orders.json?auth=$authToken';
+        'https://shop-app-dc2e5.firebaseio.com/orders/$userId.json?auth=$authToken';
     final response = await http.get(url);
     final List<Order> loadedOrders = [];
     final extractedData = json.decode(response.body) as Map<String, dynamic>;
@@ -49,7 +54,7 @@ class Orders with ChangeNotifier {
 
   Future<void> addOrder(List<Cart> cartProducts, double total) async {
     final url =
-        'https://shop-app-dc2e5.firebaseio.com/orders.json?auth=$authToken';
+        'https://shop-app-dc2e5.firebaseio.com/orders/$userId.json?auth=$authToken';
     try {
       final timestamp = DateTime.now();
       final response = await http.post(
@@ -59,7 +64,7 @@ class Orders with ChangeNotifier {
           'time': timestamp.toIso8601String(),
           'products': cartProducts
               .map((f) => {
-                    'id': f.id,
+                    'time': f.id,
                     'title': f.title,
                     'quantity': f.quantity,
                     'price': f.price,
