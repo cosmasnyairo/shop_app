@@ -28,13 +28,14 @@ class Product with ChangeNotifier {
     final oldStatus = isFavourite;
     isFavourite = !isFavourite;
     notifyListeners();
-    final url = 'https://shop-app-dc2e5.firebaseio.com/Favourites/$userId/$id.json?auth=$authToken';
+    final url =
+        'https://shop-app-dc2e5.firebaseio.com/Favourites/$userId/$id.json?auth=$authToken';
     try {
-      final response = await http.patch(
+      final response = await http.put(
         url,
-        body: json.encode({   
-          'isFavourite': isFavourite,
-        }),
+        body: json.encode(
+          isFavourite,
+        ),
       );
       if (response.statusCode >= 400) {
         _setFavourite(oldStatus);

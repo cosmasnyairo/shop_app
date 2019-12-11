@@ -7,7 +7,9 @@ import '../models/product.dart';
 
 class Products with ChangeNotifier {
   final String authToken;
-  Products(this.authToken, this._items);
+  final String userId;
+
+  Products(this.authToken, this._items, this.userId);
 
   List<Product> _items = [];
   List<Product> get items {
@@ -32,15 +34,19 @@ class Products with ChangeNotifier {
       if (extractedData == null) {
         return;
       }
+      final favurl= 'https://shop-app-dc2e5.firebaseio.com/Favourites/$userId.json?auth=$authToken';
+      final favouriteResponse = await http.get(favurl);
+      final favouriteData = json.decode(favouriteResponse.body);
+
       final List<Product> loadedProducts = [];
       extractedData.forEach((prodId, prodData) {
         loadedProducts.add(Product(
           id: prodId,
           title: prodData['title'],
           description: prodData['description'],
+          isFavourite: favouriteData==null ? false : favouriteData[prodId] ?? false,
           imageUrl: prodData['imageUrl'],
           price: prodData['price'],
-          isFavourite: prodData['isFavourite'],
         ));
       });
       _items = loadedProducts;
@@ -62,7 +68,6 @@ class Products with ChangeNotifier {
           'description': prod.description,
           'price': prod.price,
           'imageUrl': prod.imageUrl,
-          'isFavourite': prod.isFavourite,
         }),
       );
       final newProduct = Product(
