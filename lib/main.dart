@@ -3,6 +3,8 @@ import 'package:provider/provider.dart';
 
 import './screens/auth_screen.dart';
 
+import './screens/splash_screen.dart';
+
 import './screens/user_products_screen.dart';
 import './screens/edit_product_screen.dart';
 
@@ -34,11 +36,8 @@ class MyApp extends StatelessWidget {
         //either syntax works
         ChangeNotifierProvider.value(value: Carts()),
         ChangeNotifierProxyProvider<Authenticate, Orders>(
-          update: (ctx, auth, previousOrder) => Orders(
-            auth.token,
-            previousOrder == null ? [] : previousOrder.orders,
-            auth.userID
-          ),
+          update: (ctx, auth, previousOrder) => Orders(auth.token,
+              previousOrder == null ? [] : previousOrder.orders, auth.userID),
         ),
       ],
       child: Consumer<Authenticate>(
@@ -50,7 +49,15 @@ class MyApp extends StatelessWidget {
             fontFamily: 'Lato',
             canvasColor: Color.fromRGBO(180, 215, 219, 1),
           ),
-          home: auth.isAuth ? ProductsOverview() : AuthScreen(),
+          home: auth.isAuth
+              ? ProductsOverview()
+              : FutureBuilder(
+                  future: auth.autoLogin(),
+                  builder: (ctx, authsnapshot) =>
+                      authsnapshot.connectionState == ConnectionState.waiting
+                          ? SplashScreen()
+                          : SplashScreen(),
+                ),
           routes: {
             'product-overview': (ctx) => ProductsOverview(),
             'product-detail': (ctx) => ProductsDetail(),
