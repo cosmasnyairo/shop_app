@@ -68,6 +68,7 @@ class Products with ChangeNotifier {
           'description': prod.description,
           'price': prod.price,
           'imageUrl': prod.imageUrl,
+          'creatorId' : userId,
         }),
       );
       final newProduct = Product(
