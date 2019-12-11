@@ -30,14 +30,14 @@ class MyApp extends StatelessWidget {
           update: (ctx, auth, previousProduct) => Products(
             auth.token,
             previousProduct == null ? [] : previousProduct.items,
-            auth.userID,
+            auth.userId,
           ),
         ),
         //either syntax works
         ChangeNotifierProvider.value(value: Carts()),
         ChangeNotifierProxyProvider<Authenticate, Orders>(
           update: (ctx, auth, previousOrder) => Orders(auth.token,
-              previousOrder == null ? [] : previousOrder.orders, auth.userID),
+              previousOrder == null ? [] : previousOrder.orders, auth.userId),
         ),
       ],
       child: Consumer<Authenticate>(
@@ -56,7 +56,7 @@ class MyApp extends StatelessWidget {
                   builder: (ctx, authsnapshot) =>
                       authsnapshot.connectionState == ConnectionState.waiting
                           ? SplashScreen()
-                          : SplashScreen(),
+                          : AuthScreen(),
                 ),
           routes: {
             'product-overview': (ctx) => ProductsOverview(),

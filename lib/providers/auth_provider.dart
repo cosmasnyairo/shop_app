@@ -66,7 +66,7 @@ class Authenticate with ChangeNotifier {
     }
   }
 
-  String get userID {
+  String get userId {
     return _userId;
   }
 
@@ -94,12 +94,12 @@ class Authenticate with ChangeNotifier {
     if (expiryDate.isBefore(DateTime.now())) {
       return false;
     }
-    _token = extracedUserData['_token'];
-    _userId = extracedUserData['_userId'];
+    _token = extracedUserData['token'];
+    _userId = extracedUserData['userId'];
     _expiryDate = expiryDate;
     notifyListeners();
     _autoLogout();
-    return false;
+    return true;
   }
 
   void logout() {
