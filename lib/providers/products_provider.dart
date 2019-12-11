@@ -24,17 +24,19 @@ class Products with ChangeNotifier {
     return _items.firstWhere((p) => p.id == id);
   }
 
-  Future<void> fetchProducts() async {
-    
-  final url =
-      'https://shop-app-dc2e5.firebaseio.com/products.json?auth=$authToken';
+  Future<void> fetchProducts([bool filterByUser = false]) async {
+    final filterString =
+        filterByUser ? 'orderBy="creatorId"&equalTo="$userId"' : '';
+    final url =
+        'https://shop-app-dc2e5.firebaseio.com/products.json?auth=$authToken&$filterString';
     try {
       final response = await http.get(url);
       final extractedData = json.decode(response.body) as Map<String, dynamic>;
       if (extractedData == null) {
         return;
       }
-      final favurl= 'https://shop-app-dc2e5.firebaseio.com/Favourites/$userId.json?auth=$authToken';
+      final favurl =
+          'https://shop-app-dc2e5.firebaseio.com/Favourites/$userId.json?auth=$authToken';
       final favouriteResponse = await http.get(favurl);
       final favouriteData = json.decode(favouriteResponse.body);
 
@@ -44,7 +46,8 @@ class Products with ChangeNotifier {
           id: prodId,
           title: prodData['title'],
           description: prodData['description'],
-          isFavourite: favouriteData==null ? false : favouriteData[prodId] ?? false,
+          isFavourite:
+              favouriteData == null ? false : favouriteData[prodId] ?? false,
           imageUrl: prodData['imageUrl'],
           price: prodData['price'],
         ));
@@ -57,9 +60,8 @@ class Products with ChangeNotifier {
   }
 
   Future<void> addProducts(Product prod) async {
-    
-  final url =
-      'https://shop-app-dc2e5.firebaseio.com/products.json?auth=$authToken';
+    final url =
+        'https://shop-app-dc2e5.firebaseio.com/products.json?auth=$authToken';
     try {
       final response = await http.post(
         url,
@@ -68,7 +70,7 @@ class Products with ChangeNotifier {
           'description': prod.description,
           'price': prod.price,
           'imageUrl': prod.imageUrl,
-          'creatorId' : userId,
+          'creatorId': userId,
         }),
       );
       final newProduct = Product(
