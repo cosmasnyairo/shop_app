@@ -24,11 +24,11 @@ class Product with ChangeNotifier {
     notifyListeners();
   }
 
-  void toggleFavourite(String authToken) async {
+  void toggleFavourite(String authToken, String userId) async {
     final oldStatus = isFavourite;
     isFavourite = !isFavourite;
     notifyListeners();
-    final url = 'https://shop-app-dc2e5.firebaseio.com/products/$id.json?auth=$authToken';
+    final url = 'https://shop-app-dc2e5.firebaseio.com/Favourites/$userId/$id.json?auth=$authToken';
     try {
       final response = await http.patch(
         url,

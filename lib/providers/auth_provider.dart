@@ -54,6 +54,9 @@ class Authenticate with ChangeNotifier {
       throw error;
     }
   }
+  String get userID{
+    return _userId;
+  }
 
   Future<void> signup(
     String email,

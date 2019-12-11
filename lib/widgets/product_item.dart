@@ -53,7 +53,7 @@ class ProductItem extends StatelessWidget {
                   ),
                 );
               }
-              product.toggleFavourite(authData.token);
+              product.toggleFavourite(authData.token, authData.userID);
             },
           ),
           title: Text(
