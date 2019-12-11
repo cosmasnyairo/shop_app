@@ -37,7 +37,8 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider.value(value: Carts()),
         ChangeNotifierProxyProvider<Authenticate, Orders>(
           update: (ctx, auth, previousOrder) => Orders(auth.token,
-              previousOrder == null ? [] : previousOrder.orders, auth.userId),
+              previousOrder == null ? [] : previousOrder.orders, auth.userId,
+        ),
         ),
       ],
       child: Consumer<Authenticate>(
@@ -53,8 +54,8 @@ class MyApp extends StatelessWidget {
               ? ProductsOverview()
               : FutureBuilder(
                   future: auth.autoLogin(),
-                  builder: (ctx, authsnapshot) =>
-                      authsnapshot.connectionState == ConnectionState.waiting
+                  builder: (ctx, authResultSnapshot) =>
+                      authResultSnapshot.connectionState == ConnectionState.waiting
                           ? SplashScreen()
                           : AuthScreen(),
                 ),

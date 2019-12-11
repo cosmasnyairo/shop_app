@@ -26,10 +26,14 @@ class Authenticate with ChangeNotifier {
     return null;
   }
 
+  String get userId {
+    return _userId;
+  }
+
   Future<void> _authenticate(
       String email, String password, String urlSegment) async {
     final url =
-        'https://identitytoolkit.googleapis.com/v1/accounts:$urlSegment?key=AIzaSyDItwc0f3RYXh3TuY0pzj-thkQN3ZMTOhQ';
+        'https://www.googleapis.com/identitytoolkit/v3/relyingparty/$urlSegment?key=AIzaSyDItwc0f3RYXh3TuY0pzj-thkQN3ZMTOhQ';
     try {
       final response = await http.post(
         url,
@@ -49,75 +53,73 @@ class Authenticate with ChangeNotifier {
       _userId = responseData['localId'];
       _expiryDate = DateTime.now().add(
         Duration(
-          seconds: int.parse(responseData['expiresIn']),
+          seconds: int.parse(
+            responseData['expiresIn'],
+          ),
         ),
       );
       _autoLogout();
       notifyListeners();
       final prefs = await SharedPreferences.getInstance();
-      final userdata = json.encode({
-        '_token': token,
-        'userId': _userId,
-        'expiryDate': _expiryDate.toString(),
-      });
-      prefs.setString('userdata', userdata);
+      final userData = json.encode(
+        {
+          'token': _token,
+          'userId': _userId,
+          'expiryDate': _expiryDate.toIso8601String(),
+        },
+      );
+      prefs.setString('userData', userData);
     } catch (error) {
       throw error;
     }
   }
 
-  String get userId {
-    return _userId;
+  Future<void> signup(String email, String password) async {
+    return _authenticate(email, password, 'signupNewUser');
   }
 
-  Future<void> signup(
-    String email,
-    String password,
-  ) async {
-    return _authenticate(email, password, 'signUp');
-  }
-
-  Future<void> login(
-    String email,
-    String password,
-  ) async {
-    return _authenticate(email, password, 'signInWithPassword');
+  Future<void> login(String email, String password) async {
+    return _authenticate(email, password, 'verifyPassword');
   }
 
   Future<bool> autoLogin() async {
     final prefs = await SharedPreferences.getInstance();
-    if (!prefs.containsKey('userdata')) {
+    if (!prefs.containsKey('userData')) {
       return false;
     }
-    final extracedUserData = prefs.getString('userdata') as Map<String, Object>;
-    final expiryDate = DateTime.parse(extracedUserData['expiryDate']);
+    final extractedUserData =
+        json.decode(prefs.getString('userData')) as Map<String, Object>;
+    final expiryDate = DateTime.parse(extractedUserData['expiryDate']);
+
     if (expiryDate.isBefore(DateTime.now())) {
       return false;
     }
-    _token = extracedUserData['token'];
-    _userId = extracedUserData['userId'];
+    _token = extractedUserData['token'];
+    _userId = extractedUserData['userId'];
     _expiryDate = expiryDate;
     notifyListeners();
     _autoLogout();
     return true;
   }
 
-  void logout() {
+  Future<void> logout() async {
     _token = null;
-    _expiryDate = null;
     _userId = null;
+    _expiryDate = null;
     if (_authTimer != null) {
       _authTimer.cancel();
+      _authTimer = null;
     }
     notifyListeners();
+    final prefs = await SharedPreferences.getInstance();
+    prefs.clear();
   }
 
   void _autoLogout() {
     if (_authTimer != null) {
       _authTimer.cancel();
     }
-
-    final timetoExpire = _expiryDate.difference(DateTime.now()).inSeconds;
-    _authTimer = Timer(Duration(seconds: timetoExpire), logout);
+    final timeToExpiry = _expiryDate.difference(DateTime.now()).inSeconds;
+    _authTimer = Timer(Duration(seconds: timeToExpiry), logout);
   }
 }
