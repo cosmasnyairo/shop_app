@@ -79,8 +79,7 @@ class _AuthCardState extends State<AuthCard>
   final _passwordController = TextEditingController();
 
   AnimationController _animationController;
-  Animation<Size> _animationHeight;
-
+  Animation<double> _animationOpacity;
   @override
   void initState() {
     _animationController = AnimationController(
@@ -90,18 +89,14 @@ class _AuthCardState extends State<AuthCard>
       ),
     );
 
-    _animationHeight = Tween<Size>(
-      begin: Size(double.infinity, 300),
-      end: Size(double.infinity, 400),
-    ).animate(
-      CurvedAnimation(
-        parent: _animationController,
-        curve: Curves.easeIn,
-      ),
-    );
-    _animationHeight.addListener(
-      () => setState(() {}),
-    );
+    _animationOpacity = Tween(
+      begin: 0.0,
+      end: 1.0,
+    ).animate(CurvedAnimation(
+      parent: _animationController,
+      curve: Curves.linear,
+    ));
+    super.initState();
   }
 
   @override
@@ -203,11 +198,12 @@ class _AuthCardState extends State<AuthCard>
       margin: EdgeInsets.all(11),
       color: Colors.transparent,
       elevation: 0,
-      child: Container(
-        // height: _authMode == AuthMode.Signup ? 400 : 300,
-        height: _animationHeight.value.height,
+      child: AnimatedContainer(
+        duration: Duration(milliseconds: 400),
+        curve: Curves.easeInCirc,
+        height: _authMode == AuthMode.Signup ? 400 : 300,
         constraints: BoxConstraints(
-          minHeight: _animationHeight.value.height,
+          minHeight: _authMode == AuthMode.Signup ? 400 : 300,
         ),
         width: deviceSize.width,
         padding: EdgeInsets.all(16.0),
@@ -223,6 +219,7 @@ class _AuthCardState extends State<AuthCard>
                     if (value.isEmpty || !value.contains('@')) {
                       return 'Invalid email!';
                     }
+                    return null;
                   },
                   onSaved: (value) {
                     _authData['email'] = value;
@@ -236,24 +233,37 @@ class _AuthCardState extends State<AuthCard>
                     if (value.isEmpty || value.length < 5) {
                       return 'Password is too short!';
                     }
+                    return null;
                   },
                   onSaved: (value) {
                     _authData['password'] = value;
                   },
                 ),
-                if (_authMode == AuthMode.Signup)
-                  TextFormField(
-                    enabled: _authMode == AuthMode.Signup,
-                    decoration: InputDecoration(labelText: 'Confirm Password'),
-                    obscureText: true,
-                    validator: _authMode == AuthMode.Signup
-                        ? (value) {
-                            if (value != _passwordController.text) {
-                              return 'Passwords do not match!';
-                            }
-                          }
-                        : null,
+                AnimatedContainer(
+                  duration: Duration(milliseconds: 400),
+                  constraints: BoxConstraints(
+                    minHeight: _authMode == AuthMode.Signup ? 60: 0,
+                    maxHeight: _authMode == AuthMode.Signup ? 120: 0,
                   ),
+                  curve: Curves.fastLinearToSlowEaseIn,
+                  child: FadeTransition(
+                    opacity: _animationOpacity,
+                    child: TextFormField(
+                      enabled: _authMode == AuthMode.Signup,
+                      decoration:
+                          InputDecoration(labelText: 'Confirm Password'),
+                      obscureText: true,
+                      validator: _authMode == AuthMode.Signup
+                          ? (value) {
+                              if (value != _passwordController.text) {
+                                return 'Passwords do not match!';
+                              }
+                              return null;
+                            }
+                          : null,
+                    ),
+                  ),
+                ),
                 SizedBox(
                   height: 20,
                 ),
@@ -289,28 +299,3 @@ class _AuthCardState extends State<AuthCard>
     );
   }
 }
-
-// SizedBox(
-//   height: 50,
-// ),
-// Container(
-//   color: Colors.redAccent,
-//   height: 350,
-//   child: Center(child: Text('User Details')),
-// ),
-// SizedBox(
-//   height: 20,
-// ),
-// Container(
-//   color: Colors.redAccent,
-//   height: 60,
-//   child: Center(child: Text(' Login Buttons')),
-// ),
-// SizedBox(
-//   height: 20,
-// ),
-// Container(
-//   color: Colors.redAccent,
-//   height: 60,
-//   child: Center(child: Text('Login / Signup?')),
-// ),
