@@ -9,52 +9,74 @@ class ProductsDetail extends StatelessWidget {
     final productId = ModalRoute.of(context).settings.arguments as String;
     final loadedProduct = Provider.of<Products>(context).findById(productId);
     return Scaffold(
-      appBar: AppBar(
-        title: Text(loadedProduct.title),
-      ),
-      body: SingleChildScrollView(
-        child: Column(
-          children: <Widget>[
-            Container(
-              height: 350,
-              width: double.infinity,
-              padding: EdgeInsets.all(10),
-              child: ClipRRect(
-                borderRadius: BorderRadius.circular(12),
-                child: Hero(
-                  
-                  tag: loadedProduct.id,
-                  child: Image.network(
-                    loadedProduct.imageUrl,
-                    fit: BoxFit.fill,
+      // appBar: AppBar(
+      //
+      // ),
+      body: CustomScrollView(
+        slivers: <Widget>[
+          SliverAppBar(
+            expandedHeight: 350,
+            pinned: true,
+            flexibleSpace: FlexibleSpaceBar(
+              title: Text(
+                loadedProduct.title,
+                style: TextStyle(
+                  color: Colors.orangeAccent,
+                  fontSize: 15
+                ),
+              ),
+              background: SafeArea(
+                child: ClipRRect(
+                  child: Hero(
+                    tag: loadedProduct.id,
+                    child: Image.network(
+                      loadedProduct.imageUrl,
+                      fit: BoxFit.fill,
+                    ),
                   ),
                 ),
               ),
             ),
-            SizedBox(
-              height: 10,
-            ),
-            Text(
-              '\$ ${loadedProduct.price}',
-              style: TextStyle(
-                color: Colors.green,
-                fontSize: 20,
+          ),
+          SliverList(
+            delegate: SliverChildListDelegate([
+              SizedBox(
+                height: 10,
               ),
-            ),
-            SizedBox(
-              height: 10,
-            ),
-            Container(
-              width: double.infinity,
-              padding: EdgeInsets.symmetric(horizontal: 12),
-              child: Text(
-                '${loadedProduct.description}',
+              Text(
+                '\$ ${loadedProduct.price}',
+                style: TextStyle(
+                  color: Colors.green,
+                  fontSize: 20,
+                ),
                 textAlign: TextAlign.center,
-                softWrap: true,
               ),
-            ),
-          ],
-        ),
+              SizedBox(
+                height: 10,
+              ),
+              Container(
+                width: double.infinity,
+                padding: EdgeInsets.symmetric(horizontal: 12),
+                child: Text(
+                  '${loadedProduct.description}',
+                  textAlign: TextAlign.center,
+                  softWrap: true,
+                ),
+              ),
+              SizedBox(height: 800)
+            ]),
+          ),
+        ],
+        // child: Column(
+        //   children: <Widget>[
+        //     Container(
+        //       height: 350,
+        //       width: double.infinity,
+        //       padding: EdgeInsets.all(10),
+        //       child:
+        //     ),
+        //   ],
+        // ),
       ),
     );
   }
