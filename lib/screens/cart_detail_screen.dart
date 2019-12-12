@@ -14,7 +14,6 @@ class CartDetail extends StatelessWidget {
       appBar: AppBar(
         title: Text('Cart'),
       ),
-      drawer: AppDrawer(),
       body: Column(
         children: <Widget>[
           Card(
