@@ -4,7 +4,6 @@ import 'package:provider/provider.dart';
 import '../providers/products_provider.dart';
 
 class ProductsDetail extends StatelessWidget {
-
   @override
   Widget build(BuildContext context) {
     final productId = ModalRoute.of(context).settings.arguments as String;
@@ -22,9 +21,13 @@ class ProductsDetail extends StatelessWidget {
               padding: EdgeInsets.all(10),
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(12),
-                child: Image.network(
-                  loadedProduct.imageUrl,
-                  fit: BoxFit.fill,
+                child: Hero(
+                  
+                  tag: loadedProduct.id,
+                  child: Image.network(
+                    loadedProduct.imageUrl,
+                    fit: BoxFit.fill,
+                  ),
                 ),
               ),
             ),
